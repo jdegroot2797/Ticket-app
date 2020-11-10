@@ -1,5 +1,5 @@
 apiVersion: skaffold/v2alpha3
-kind: config
+kind: Config
 deploy:
   kubectl:
     manifests:
@@ -11,7 +11,7 @@ build:
     - image: jdegroot2797/auth
       context: auth
       docker:
-        dockerfile: dockerfile
+        dockerfile: Dockerfile
       sync:
         manual:
           - src: 'src/**/*.ts'

@@ -5,10 +5,12 @@ deploy:
     manifests:
       - ./infra/k8s/*
 build:
-  local:
-    push: false
+  # local:
+  #   push: false
+  googleCloudBuild:
+    projectId: tix-app-295201 
   artifacts:
-    - image: jdegroot2797/auth
+    - image: us.gcr.io/tix-app-295201/auth
       context: auth
       docker:
         dockerfile: Dockerfile

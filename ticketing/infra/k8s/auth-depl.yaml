@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: auth
-          image: us.gcr.io/tix-app-295201/auth
+          # image: us.gcr.io/tix-app-295201/auth
+          image: jdegroot2797/auth
 ---
 apiVersion: v1
 kind: Service

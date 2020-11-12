@@ -32,6 +32,7 @@ router.post('/api/users/signup',
         if(existingUser){
             console.log('email in use');
             res.send({});
+            //TODO: create bad request error
         }
 
         //create user

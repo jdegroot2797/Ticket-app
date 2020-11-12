@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import { RequestValidationError } from '../errors/request-validation-error';
-import { DatabaseConnectionError } from '../errors/database-connection-error'; 
+import { User } from '../models/user';
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.post('/api/users/signup',
             .isLength({min: 8, max: 80})
             .withMessage('Password must be between 8 to 80 characters')
     ],
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
         // check for errors
         const errors = validationResult(req);
 
@@ -24,11 +24,21 @@ router.post('/api/users/signup',
             throw new RequestValidationError(errors.array());
         }
         // retrieve email and password from body
-        // const { email, password } = req.body;
-        throw new DatabaseConnectionError();
-        res.send({});
+        const { email, password } = req.body;
+        
+        // check if user exists
+        const existingUser = await User.findOne({ email });
+        
+        if(existingUser){
+            console.log('email in use');
+            res.send({});
+        }
 
-        // validate information
+        //create user
+        const user = User.createUser({ email, password });
+        (await user).save();
+
+        res.status(201).send(user);
     }
 );
 

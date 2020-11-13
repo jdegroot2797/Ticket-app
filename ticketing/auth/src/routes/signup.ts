@@ -35,8 +35,9 @@ router.post('/api/users/signup',
         }
 
         //create user
+        // TODO: password hashing 
         const user = User.createUser({ email, password });
-        (await user).save();
+        await user.save();
 
         res.status(201).send(user);
     }

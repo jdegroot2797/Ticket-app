@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { Password } from '../services/password';
 
 // Enforce type checking since TS and Mongoose don't talk to each other
 interface UserAttributes {
@@ -27,6 +28,20 @@ const userSchema = new mongoose.Schema({
         required: true
     }
 });
+
+// access the middleware, this will run before mongoose
+// executs a save() on a schema object
+// must use 'function' keyword or the context is lost to the document 
+// and will look at this files context instead of db's document
+userSchema.pre('save', async function(done) {
+    // only attempt to hash password if password has been modified
+    if(this.isModified('password')){
+        const hashed = await Password.toHash(this.get('password'));
+        this.set('password', hashed);
+    }
+    done();
+})
+
 // custom function to create a mongoose user object with type checking
 userSchema.statics.createUser = (attrs: UserAttributes) => {
     return new User(attrs);

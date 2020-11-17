@@ -6,7 +6,7 @@ import { promisify } from 'util';
 // output from scrypt is a buffer... must convert to a string
 const scryptAsync = promisify(scrypt);
 
-export class Password {
+export class PasswordManager {
     static async toHash(password: string) {
         const salt = randomBytes(8).toString('hex');
         const buf = (await scryptAsync(password, salt, 64)) as Buffer;

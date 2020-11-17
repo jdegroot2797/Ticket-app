@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
 import { RequestValidationError } from '../errors/request-validation-error'
 import { BadRequestError } from '../errors/bad-request-error';
 import { User } from '../models/user';
@@ -34,10 +35,20 @@ router.post('/api/users/signup',
             throw new BadRequestError('Email is already in use');
         }
 
-        //create user
-        // TODO: password hashing 
+        // create user
         const user = User.createUser({ email, password });
         await user.save();
+        
+        // generate JWT token
+        const userJWT = jwt.sign({
+            id: user.id,
+            email: user.email
+        }, 'placeholder');
+
+        // store jwt on cookieSession
+        req.session = {
+            jwt: userJWT
+        }; 
 
         res.status(201).send(user);
     }

@@ -3,6 +3,7 @@ import express from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
 import mongoose from 'mongoose';
+import cookieSession from 'cookie-session';
 
 // ROUTES
 import { currentUserRouter } from './routes/current-user';
@@ -16,7 +17,16 @@ import { NotFoundError } from './errors/not-found';
 
 // REGISTER APP & MIDDLEWARE
 const app = express();
+
+// traffic is being proxied by ingress-nginx
+app.set('trust proxy', true);
+
 app.use(json());
+app.use(cookieSession({
+    signed: false,
+    secure: true
+  })
+);
 
 
 // REGISTER ROUTE HANDLERS

@@ -16,8 +16,8 @@ router.post('/api/users/signup',
             .withMessage('Must provide valid email'),
         body('password')
             .trim()
-            .isLength({min: 8, max: 80})
-            .withMessage('Password must be between 8 to 80 characters')
+            .isLength({min: 8, max: 40})
+            .withMessage('Password must be between 8 to 40 characters')
     ],
     // validation error handling middleware for code reusability
     // for all our routes

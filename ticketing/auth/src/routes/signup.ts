@@ -43,7 +43,7 @@ router.post('/api/users/signup',
         const userJWT = jwt.sign({
             id: user.id,
             email: user.email,
-        }, 'placeholder');
+        }, process.env.JWT_KEY!);
 
         // store jwt on cookieSession
         req.session = {

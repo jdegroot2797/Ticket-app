@@ -27,6 +27,17 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     }
+}, {
+    toJSON:{
+        // doc is the mongodb document, ret is what will be returned
+        // since mongo will try to use toJSON we can edit ret
+        transform(doc, ret){
+            delete ret.password;
+            delete ret.__v;
+            ret.id = ret._id;
+            delete ret._id;
+        }
+    }
 });
 
 // access the middleware, this will run before mongoose
@@ -45,7 +56,7 @@ userSchema.pre('save', async function(done) {
 // custom function to create a mongoose user object with type checking
 userSchema.statics.createUser = (attrs: UserAttributes) => {
     return new User(attrs);
-}
+};
 
 const User = mongoose.model<UserDoc, UserModel>('User', userSchema);
 

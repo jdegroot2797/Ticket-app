@@ -42,12 +42,12 @@ router.post('/api/users/signup',
         // generate JWT token
         const userJWT = jwt.sign({
             id: user.id,
-            email: user.email
+            email: user.email,
         }, 'placeholder');
 
         // store jwt on cookieSession
         req.session = {
-            jwt: userJWT
+            jwt: userJWT,
         }; 
 
         res.status(201).send(user);

@@ -40,7 +40,7 @@ userSchema.pre('save', async function(done) {
         this.set('password', hashed);
     }
     done();
-})
+});
 
 // custom function to create a mongoose user object with type checking
 userSchema.statics.createUser = (attrs: UserAttributes) => {

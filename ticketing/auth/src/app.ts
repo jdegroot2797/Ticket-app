@@ -23,7 +23,9 @@ app.set('trust proxy', true);
 app.use(json());
 app.use(cookieSession({
     signed: false,
-    secure: true
+    //sets cookie session to secure connections only except
+    //for test environments
+    secure: process.env.NODE_ENV !== 'test'
   })
 );
 

@@ -7,7 +7,11 @@ let mongo: any;
 // Hook that runs before all tests
 // sets up in memory mongo db server
 beforeAll(async () => {
-    const mongo = new MongoMemoryServer();
+    // env variable is defined in pod, for testing purposes
+    // declaring env variable here
+    process.env.JWT_KEY = 'asdassdadsa';
+
+    mongo = new MongoMemoryServer();
     const mongoUri = await mongo.getUri();
 
     await mongoose.connect(mongoUri, {
@@ -29,7 +33,7 @@ beforeEach(async () =>{
 
 // Hook that runs after all tests are completed
 // cleans up server and shuts down server and connection
-afterAll (async () =>{
+afterAll(async () => {
     await mongo.stop();
     await mongoose.connection.close();
-})
+});

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 
-export default ({ url, method, body }) => {
+export default ({ url, method, body, onSuccess }) => {
   // errors state is null until we receive an errors array
   const [errors, setErrors] = useState(null);
 
@@ -9,6 +9,13 @@ export default ({ url, method, body }) => {
     try {
       setErrors(null);
       const response = await axios[method](url, body);
+
+      // check if onSuccess callback is provided,
+      // if so return some data
+      if (onSuccess) {
+        onSuccess(response.data);
+      }
+
       return response.data;
     } catch (err) {
       setErrors(

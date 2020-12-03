@@ -5,10 +5,10 @@ logs
 **/*.backup.*
 **/*.back.*
 
+.next
+
 node_modules
 bower_components
-
-*.sublime*
 
 psd
 thumb

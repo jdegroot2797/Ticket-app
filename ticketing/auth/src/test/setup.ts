@@ -1,6 +1,16 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
+import request from 'supertest';
 import { app } from '../app';
+
+// Required for typescript to recognize testing authentication helper
+declare global {
+    namespace NodeJS {
+        interface Global {
+            testSignup(): Promise<string[]>
+        }
+    }
+}
 
 let mongo: any;
 
@@ -37,3 +47,24 @@ afterAll(async () => {
     await mongo.stop();
     await mongoose.connection.close();
 });
+
+// Global auth testing helper
+// for use in test environment so when testing authentication services
+// put into the global space so an import isn't needed each timers
+
+global.testSignup = async () => {
+    const email = 'test@test.com';
+    const password = 'password';
+
+    const res = await request(app)
+        .post('/api/users/signup')
+        .send({ 
+            email,
+            password
+        })
+        .expect(201)
+
+    const cookie = res.get('Set-Cookie');
+
+    return cookie;
+}

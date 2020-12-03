@@ -32,7 +32,6 @@ router.post(
     if (!passwordsMatch) {
       throw new BadRequestError('invalid login credentials');
     }
-
     // generate JWT token
     const userJWT = jwt.sign(
       {

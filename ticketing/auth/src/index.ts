@@ -2,9 +2,8 @@ import mongoose from 'mongoose';
 
 import { app } from './app';
 
-
 const startUp = async () => {
-  if(!process.env.JWT_KEY){
+  if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY environment variable must be defined');
   }
 
@@ -15,13 +14,13 @@ const startUp = async () => {
       useCreateIndex: true,
     });
     console.log('connected to mongodb');
-  } catch (err){
+  } catch (err) {
     console.error(err);
   }
-}
+};
 
 app.listen(3000, () => {
-    console.log('Listening on port 3000!');
+  console.log('Listening on port 3000!');
 });
 
 // listen for traffic after app is live

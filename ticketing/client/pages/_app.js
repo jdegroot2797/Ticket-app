@@ -6,5 +6,5 @@ import 'bootstrap/dist/css/bootstrap.css';
 // or file when rendered onto the screen
 // src: https://nextjs.org/docs/basic-features/built-in-css-support
 export default ({ Component, pageProps }) => {
-    return <Component {...pageProps} />
+  return <Component {...pageProps} />;
 };

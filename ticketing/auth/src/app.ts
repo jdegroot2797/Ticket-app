@@ -21,20 +21,20 @@ const app = express();
 app.set('trust proxy', true);
 
 app.use(json());
-app.use(cookieSession({
+app.use(
+  cookieSession({
     signed: false,
     //sets cookie session to secure connections only except
     //for test environments
-    secure: process.env.NODE_ENV !== 'test'
-  })
+    secure: process.env.NODE_ENV !== 'test',
+  }),
 );
-
 
 // REGISTER ROUTE HANDLERS
 app.use(currentUserRouter);
 app.use(signInRouter);
 app.use(signOutRouter);
-app.use(signUpRouter)
+app.use(signUpRouter);
 
 app.all('*', async () => {
   throw new NotFoundError();

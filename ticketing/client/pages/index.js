@@ -1,4 +1,4 @@
-import axios from 'axios';
+import buildClient from '../api/build-client';
 
 // this is a component (browser)
 const landingPage = ({ currentUser }) => {
@@ -24,23 +24,11 @@ const landingPage = ({ currentUser }) => {
 // Window only exist in browser, does not exist in node.js
 // with this we now know we are on the server and requests should be made to
 // http://<service name>.<namespace name>.svc.cluster.local
-landingPage.getInitialProps = async ({ req }) => {
-  if (typeof window === 'undefined') {
-    // we are on the server
-    const { data } = await axios.get(
-      'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser',
-      {
-        // pass on headers (cookies) to auth service
-        headers: req.headers,
-      },
-    );
-    return data;
-  } else {
-    // we are on the browser and it will handle the base url for us
-    const { data } = await axios.get('/api/users/currentuser');
-    // { currentUser } object will be returned
-    return data;
-  }
+landingPage.getInitialProps = async (context) => {
+  const client = buildClient(context);
+  const { data } = await client.get('/api/users/currentuser');
+  
+  return data;
 };
 
 export default landingPage;

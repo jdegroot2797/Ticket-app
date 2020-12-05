@@ -2,8 +2,7 @@ import buildClient from '../api/build-client';
 
 // this is a component (browser)
 const landingPage = ({ currentUser }) => {
-  console.log(currentUser);
-  return <h1>Hello</h1>;
+  return currentUser ? <h1>Signed in</h1> : <h1>Not signed in</h1>;
 };
 
 //this is not a components (server)
@@ -27,7 +26,7 @@ const landingPage = ({ currentUser }) => {
 landingPage.getInitialProps = async (context) => {
   const client = buildClient(context);
   const { data } = await client.get('/api/users/currentuser');
-  
+
   return data;
 };
 

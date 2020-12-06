@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import buildClient from '../api/build-client';
 import Header from '../components/header';
 
+
 // Wrapper around component (our pages) which are displayed on the screen
 // Eg: index.js
 // this app file is guaranteed to include any global css

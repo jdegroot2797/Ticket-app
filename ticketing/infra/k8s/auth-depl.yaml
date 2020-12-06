@@ -17,10 +17,12 @@ spec:
           # image: us.gcr.io/tix-app-295201/auth
           image: jdegroot2797/auth
           env:
+            - name: MONGO_URI
+              value: 'mongodb://auth-mongo-srv:27017/auth'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
-                  name: jwt-secret 
+                  name: jwt-secret
                   key: JWT_KEY
 ---
 apiVersion: v1

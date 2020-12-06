@@ -17,10 +17,12 @@ spec:
           # image: us.gcr.io/tix-app-295201/tickets
           image: jdegroot2797/tickets
           env:
+            - name: MONGO_URI
+              value: 'mongodb://tickets-mongo-srv:27017/tickets'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
-                  name: jwt-secret 
+                  name: jwt-secret
                   key: JWT_KEY
 ---
 apiVersion: v1

@@ -5,9 +5,10 @@ import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 
 // ROUTES
+import { createTicketRouter } from './routes/new';
 
 // OUR MIDDLEWARE
-import { errorHandler, NotFoundError } from '@jdtix/common';
+import { errorHandler, NotFoundError, currentUser } from '@jdtix/common';
 
 // REGISTER APP & MIDDLEWARE
 const app = express();
@@ -24,8 +25,10 @@ app.use(
     secure: process.env.NODE_ENV !== 'test',
   }),
 );
+app.use(currentUser);
 
 // REGISTER ROUTE HANDLERS
+app.use(createTicketRouter);
 
 app.all('*', async () => {
   throw new NotFoundError();

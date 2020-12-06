@@ -2,12 +2,13 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../app';
+import jwt from 'jsonwebtoken';
 
 // Required for typescript to recognize testing authentication helper
 declare global {
   namespace NodeJS {
     interface Global {
-      testSignup(): Promise<string[]>;
+      testSignin(): string[];
     }
   }
 }
@@ -49,22 +50,29 @@ afterAll(async () => {
 });
 
 // Global auth testing helper
-// for use in test environment so when testing authentication services
-// put into the global space so an import isn't needed each timers
+// since all test must be self contained for each service
+// and when testing we don't want to interact with auth
+// we need to make our own testing JWT for auth testing in tickets service
 
-global.testSignup = async () => {
-  const email = 'test@test.com';
-  const password = 'password';
+global.testSignin = () => {
+  // Build a JWT paylod {id, email, iat}
+  const payload = {
+    id: '213f32423ff',
+    email: 'test@test.com',
+  };
 
-  const res = await request(app)
-    .post('/api/users/signup')
-    .send({
-      email,
-      password,
-    })
-    .expect(201);
+  // create the JWT
+  const token = jwt.sign(payload, process.env.JWT_KEY!);
 
-  const cookie = res.get('Set-Cookie');
+  // build a sesson object { jwt: JWT}
+  // then use it in a session
+  const session = { jwt: token };
+  const sessionJSON = JSON.stringify(session);
 
-  return cookie;
+  // take JSON and encode in base64
+  const base64 = Buffer.from(sessionJSON).toString('base64');
+
+  // return a string with cookie and encoded data
+  // supertest requires string to be in an array
+  return [`express:sess=${base64}`];
 };

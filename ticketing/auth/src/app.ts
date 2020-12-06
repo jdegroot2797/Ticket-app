@@ -11,8 +11,7 @@ import { signOutRouter } from './routes/signout';
 import { signUpRouter } from './routes/signup';
 
 // OUR MIDDLEWARE
-import { errorHandler } from './middleware/error-handler';
-import { NotFoundError } from './errors/not-found';
+import { errorHandler, NotFoundError } from '@jdtix/common';
 
 // REGISTER APP & MIDDLEWARE
 const app = express();

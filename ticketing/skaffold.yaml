@@ -8,10 +8,10 @@ build:
   local:
     push: false
   # googleCloudBuild:
-  #   projectId: tix-app-295201 
+  #   projectId: tix-app-295201
   artifacts:
     - image: jdegroot2797/auth
-    # - image: us.gcr.io/tix-app-295201/auth
+      # - image: us.gcr.io/tix-app-295201/auth
       context: auth
       docker:
         dockerfile: Dockerfile
@@ -26,4 +26,13 @@ build:
       sync:
         manual:
           - src: '**/*.js'
+            dest: .
+    - image: jdegroot2797/tickets
+      # - image: us.gcr.io/tix-app-295201/auth
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
             dest: .

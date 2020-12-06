@@ -6,6 +6,7 @@ import cookieSession from 'cookie-session';
 
 // ROUTES
 import { createTicketRouter } from './routes/new';
+import { showTicketRouter } from './routes/show';
 
 // OUR MIDDLEWARE
 import { errorHandler, NotFoundError, currentUser } from '@jdtix/common';
@@ -29,6 +30,7 @@ app.use(currentUser);
 
 // REGISTER ROUTE HANDLERS
 app.use(createTicketRouter);
+app.use(showTicketRouter);
 
 app.all('*', async () => {
   throw new NotFoundError();

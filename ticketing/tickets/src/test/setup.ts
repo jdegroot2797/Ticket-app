@@ -9,6 +9,7 @@ declare global {
   namespace NodeJS {
     interface Global {
       testSignin(): string[];
+      testMongoId(): string[];
     }
   }
 }
@@ -75,4 +76,10 @@ global.testSignin = () => {
   // return a string with cookie and encoded data
   // supertest requires string to be in an array
   return [`express:sess=${base64}`];
+};
+
+global.testMongoId = () => {
+  const id = new mongoose.Types.ObjectId().toHexString();
+
+  return [id];
 };

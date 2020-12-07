@@ -1,19 +1,39 @@
-import nats from 'node-nats-streaming';
-
+import nats, { Message } from 'node-nats-streaming';
+import { randomBytes } from 'crypto';
 console.clear();
 
-const stan = nats.connect('tix', '123', {
+// randomly generate client id so we can have multiple listener clients
+const stan = nats.connect('tix', randomBytes(6).toString('hex'), {
   url: 'http://localhost:4222',
 });
 
 stan.on('connect', () => {
   console.log('Listener connected to NATS');
 
+  // options for node nats is done by chained function calls instead of object
+  const options = stan
+    .subscriptionOptions()
+    // default nats behavior is to automatically process incoming event
+    // issue is if we want to save this to our DB but db goes down the event is lost
+    // if manual ack mode is set it is up to developers to process and acknowledgement
+    .setManualAckMode(true);
+
   // state object to listen to
-  const subscription = stan.subscribe('ticket:created');
+  const subscription = stan.subscribe(
+    'ticket:created', // name of channel
+    'order-service-queue-group', // name of queue group, used if multiple listeners for a service
+    options,
+  );
 
   // NATS community refers to event as message
-  subscription.on('message', (msg) => {
-    console.log('message received', msg);
+  subscription.on('message', (msg: Message) => {
+    const data = msg.getData();
+
+    if (typeof data === 'string') {
+      console.log(`received event #:${msg.getSequence()}, with data: ${data}`);
+    }
+    
+    // at this point with manualAckMode on we tell NATS server we got the message
+    msg.ack();
   });
 });

@@ -13,13 +13,17 @@ const stan = nats.connect('tix', 'abc', {
   url: 'http://localhost:4222',
 });
 
-stan.on('connect', () => {
+stan.on('connect', async () => {
   console.log('Publisher connection to NATS');
 
   const publisher = new TicketCreatedPublisher(stan);
-  publisher.publish({
-    id: '2033',
-    title: 'concert',
-    price: 30,
-  });
+  try {
+    await publisher.publish({
+      id: '2033',
+      title: 'concert',
+      price: 30,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });

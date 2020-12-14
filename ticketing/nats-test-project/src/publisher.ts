@@ -1,4 +1,5 @@
 import nats from 'node-nats-streaming';
+import { TicketCreatedPublisher } from './events/ticket-created-publisher';
 
 // view only NATS related logs
 console.clear();
@@ -15,17 +16,10 @@ const stan = nats.connect('tix', 'abc', {
 stan.on('connect', () => {
   console.log('Publisher connection to NATS');
 
-  // dummy ticket to try and share
-  // NATS only allows sharing of string or raw data, not objects
-  // JSON format is ideal here
-  const data = JSON.stringify({
-    id: '203203',
+  const publisher = new TicketCreatedPublisher(stan);
+  publisher.publish({
+    id: '2033',
     title: 'concert',
-    price: 40,
-  });
-
-  // args - subject, event/message, optional callback
-  stan.publish('ticket:created', data, () => {
-    console.log('event published');
+    price: 30,
   });
 });

@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 
 import { app } from './app';
+// import is lowercase for natsWrapper since this is
+// indicating this an instance of the natsWrapper
+import { natsWrapper } from './nats-wrapper';
 
 const startUp = async () => {
   if (!process.env.JWT_KEY) {
@@ -12,6 +15,7 @@ const startUp = async () => {
   }
 
   try {
+    await natsWrapper.connect('tix', 'asdsadas', 'http://nats-srv:4222');
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,

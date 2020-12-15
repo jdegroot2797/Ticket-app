@@ -7,6 +7,8 @@ import {
   NotAuthError,
 } from '@jdtix/common';
 import { Ticket } from '../models/ticket';
+import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -42,6 +44,14 @@ router.put(
 
     // needed to save the data and persist in database
     await ticket.save();
+
+    // publish event to NATS
+    new TicketUpdatedPublisher(natsWrapper.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+    });
 
     res.send(ticket);
   },

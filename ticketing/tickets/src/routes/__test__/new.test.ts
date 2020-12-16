@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket';
+import { natsWrapper } from '../../nats-wrapper';
 
 it('has a route handler listening to /api/tickets for post reqs', async () => {
   const res = await request(app).post('/api/tickets').send({});
@@ -54,7 +55,6 @@ it('returns error if invalid price provided', async () => {
 });
 
 it('create ticket with valid params', async () => {
-  // TODO: add check to make sure the ticket is saved to the db
   let tickets = await Ticket.find({});
 
   // This should be the case as when testing in
@@ -74,4 +74,17 @@ it('create ticket with valid params', async () => {
   expect(tickets.length).toEqual(1);
   expect(tickets[0].price).toEqual(20);
   expect(tickets[0].title).toEqual('sdfdsfsdsfd');
+});
+
+it('publishes an event', async () => {
+  await request(app)
+    .post('/api/tickets')
+    .set('Cookie', global.testSignin())
+    .send({
+      title: 'sdfdsfsdsfd',
+      price: 20,
+    })
+    .expect(201);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalledTimes(1);
 });

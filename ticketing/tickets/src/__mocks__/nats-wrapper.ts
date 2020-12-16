@@ -5,8 +5,13 @@ export const natsWrapper = {
   // publish(string, string, callback => void)
   client: {
     // mock of abstract class: base-publisher behaviour
-    publish: (subject: string, data: string, callback: () => void) => {
-      callback();
-    },
+    // https://jestjs.io/docs/en/mock-function-api
+    publish: jest
+      .fn()
+      .mockImplementation(
+        (subject: string, data: string, callback: () => void) => {
+          callback();
+        },
+      ),
   },
 };

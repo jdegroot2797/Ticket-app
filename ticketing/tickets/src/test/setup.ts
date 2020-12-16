@@ -15,6 +15,9 @@ declare global {
 }
 
 // utilize the fake implementation
+// for all jest test files import the nats-wrapper modulde
+// jest will see we are in a test file and redirect the import to
+// our __mocks__ nats-wrapper file instead
 jest.mock('../nats-wrapper');
 
 let mongo: any;
@@ -39,6 +42,9 @@ beforeAll(async () => {
 // reaches into mongo db and deletes all collections
 // this allows a fresh slate of data before each test that is run
 beforeEach(async () => {
+  //resets mock function each time in between tests
+  //to esnure data is wiped and a fresh slate is used
+  jest.clearAllMocks();
   const collections = await mongoose.connection.db.collections();
 
   for (let collection of collections) {

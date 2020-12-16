@@ -14,6 +14,9 @@ declare global {
   }
 }
 
+// utilize the fake implementation
+jest.mock('../nats-wrapper');
+
 let mongo: any;
 
 // Hook that runs before all tests

@@ -28,8 +28,17 @@ build:
           - src: '**/*.js'
             dest: .
     - image: jdegroot2797/tickets
-      # - image: us.gcr.io/tix-app-295201/auth
+      # - image: us.gcr.io/tix-app-295201/tickets
       context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: jdegroot2797/orders
+      # - image: us.gcr.io/tix-app-295201/orders
+      context: orders
       docker:
         dockerfile: Dockerfile
       sync:

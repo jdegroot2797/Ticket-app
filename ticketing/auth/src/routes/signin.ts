@@ -16,7 +16,6 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    //TODO: implement signin workflow with mongodb
     const { email, password } = req.body;
 
     const existingUser = await User.findOne({ email });

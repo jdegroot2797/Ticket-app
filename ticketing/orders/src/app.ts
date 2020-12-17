@@ -5,7 +5,10 @@ import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 
 // ROUTES
-// TODO: Add orders routes
+import { deleteOrderRouter } from './routes/delete';
+import { indexOrderRouter } from './routes/index';
+import { newOrderRouter } from './routes/new';
+import { showOrderRouter } from './routes/show';
 
 // OUR MIDDLEWARE
 import { errorHandler, NotFoundError, currentUser } from '@jdtix/common';
@@ -28,7 +31,10 @@ app.use(
 app.use(currentUser);
 
 // REGISTER ROUTE HANDLERS
-// TODO: register orders routes
+app.use(deleteOrderRouter);
+app.use(indexOrderRouter);
+app.use(newOrderRouter);
+app.use(showOrderRouter);
 
 app.all('*', async () => {
   throw new NotFoundError();

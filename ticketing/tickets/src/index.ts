@@ -14,8 +14,25 @@ const startUp = async () => {
     throw new Error('MONGO_URI environment variable must be defined');
   }
 
+  if (!process.env.NATS_CLIENT_ID) {
+    throw new Error('NATS_CLIENT_ID environment variable must be defined');
+  }
+
+  if (!process.env.NATS_URI) {
+    throw new Error('NATS_URI environment variable must be defined');
+  }
+
+  if (!process.env.NATS_CLUSTER_ID) {
+    throw new Error('NATS_CLUSTER_ID environment variable must be defined');
+  }
+
+  // initialize the nats client through the natsWrapper singleton class
   try {
-    await natsWrapper.connect('tix', 'asdsadas', 'http://nats-srv:4222');
+    await natsWrapper.connect(
+      process.env.NATS_CLUSTER_ID,
+      process.env.NATS_CLIENT_ID,
+      process.env.NATS_URI,
+    );
 
     // event handler if client is closed or disconnected from NATS
     natsWrapper.client.on('close', () => {

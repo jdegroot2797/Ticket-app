@@ -139,5 +139,8 @@ it('publishes an event', async () => {
     })
     .expect(200);
 
-  expect(natsWrapper.client.publish).toHaveBeenCalledTimes(1);
+  // ensure nats client is called 2 times
+  // this is due to the creation of ticket and then the update
+  // each should emmit an event message to the NATS server
+  expect(natsWrapper.client.publish).toHaveBeenCalledTimes(2);
 });

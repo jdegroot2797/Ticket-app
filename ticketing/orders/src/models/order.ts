@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 
 interface OrderAttributes {
   userId: string;
-  status: string;
+  // create OrderStatus enum for all order/payment services
+  status: OrderStatus;
   expiresAt: Date;
   ticket: TicketDoc;
 }

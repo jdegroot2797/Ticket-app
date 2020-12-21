@@ -6,6 +6,7 @@ interface OrderAttributes {
   // create OrderStatus enum for all order/payment services
   status: OrderStatus;
   expiresAt: Date;
+  // TODO: use mongodb refs to link a ticket to an order
   ticket: TicketDoc;
 }
 

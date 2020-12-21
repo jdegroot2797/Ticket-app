@@ -1,20 +1,20 @@
 import mongoose from 'mongoose';
 import { OrderStatus } from '@jdtix/common';
+import { TicketDocument } from './ticket';
 
 interface OrderAttributes {
   userId: string;
   // create OrderStatus enum for all order/payment services
   status: OrderStatus;
   expiresAt: Date;
-  // TODO: use mongodb refs to link a ticket to an order
-  ticket: TicketDoc;
+  ticket: TicketDocument;
 }
 
 interface OrderDocument extends mongoose.Document {
   userId: string;
   status: OrderStatus;
   expiresAt: Date;
-  ticket: TicketDoc;
+  ticket: TicketDocument;
 }
 
 interface OrderModel extends mongoose.Model<OrderDocument> {

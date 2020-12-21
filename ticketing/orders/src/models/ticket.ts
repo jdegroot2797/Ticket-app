@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
-import { OrderStatus } from '@jdtix/common';
 
 interface TicketAttributes {
   title: string;
   price: number;
 }
 
-interface TicketDocument extends mongoose.Document {
+export interface TicketDocument extends mongoose.Document {
   title: string;
   price: number;
 }

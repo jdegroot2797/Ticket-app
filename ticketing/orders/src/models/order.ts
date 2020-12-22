@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import { OrderStatus } from '@jdtix/common';
 import { TicketDocument } from './ticket';
 
+export { OrderStatus };
+
 interface OrderAttributes {
   userId: string;
   // create OrderStatus enum for all order/payment services

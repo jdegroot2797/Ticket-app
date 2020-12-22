@@ -13,6 +13,8 @@ import { Order } from '../models/order';
 
 const router = express.Router();
 
+const TICKET_EXPIRATION_TIMESLOT_IN_SECONDS = 15 * 60; // 15 minutes
+
 router.post(
   '/api/orders',
   requireAuth,
@@ -46,15 +48,27 @@ router.post(
       throw new BadRequestError('Ticket is already reserved');
     }
 
-    //(what if many people are all trying to get a popular ticket?)
-
     // Check the expiration date for the order
+    const expiration = new Date();
+    expiration.setSeconds(
+      expiration.getSeconds() + TICKET_EXPIRATION_TIMESLOT_IN_SECONDS,
+    );
 
     // if all the checks above are successful
     // build the order object and save it to the database as a document
+    const order = Order.build({
+      userId: req.currentUser!.id,
+      status: OrderStatus.Created,
+      expiresAt: expiration,
+      ticket,
+    });
 
-    // publish an event telling NATS that the order was successfully created
-    res.send({});
+    // save the order to the db
+    await order.save();
+
+    //TODO: publish an event telling NATS that the order was successfully created
+
+    res.status(201).send(order);
   },
 );
 

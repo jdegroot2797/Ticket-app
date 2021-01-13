@@ -4,6 +4,8 @@ import { app } from './app';
 // import is lowercase for natsWrapper since this is
 // indicating this an instance of the natsWrapper
 import { natsWrapper } from './nats-wrapper';
+import { TicketCreatedListener } from './events/listeners/ticket-created-listener';
+import { TicketUpdatedListener } from './events/listeners/ticket-updated-listener';
 
 const startUp = async () => {
   if (!process.env.JWT_KEY) {
@@ -44,6 +46,10 @@ const startUp = async () => {
     // this allows for graceful stan client shutdown
     process.on('SIGINT', () => natsWrapper.client.close());
     process.on('SIGTERM', () => natsWrapper.client.close());
+
+    // listen for events
+    new TicketCreatedListener(natsWrapper.client).listen();
+    new TicketUpdatedListener(natsWrapper.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,

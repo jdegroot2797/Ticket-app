@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { Order, OrderStatus } from './order';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 interface TicketAttributes {
   id: string;
@@ -9,6 +10,8 @@ interface TicketAttributes {
 
 export interface TicketDocument extends mongoose.Document {
   title: string;
+  // for typescript to ack that we have version attr
+  version: number;
   price: number;
 
   // checks if the ticket is already reserved to a valid order already
@@ -41,11 +44,15 @@ const ticketSchema = new mongoose.Schema(
   },
 );
 
+// OCC Implementation
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
+
 ticketSchema.statics.build = (attrs: TicketAttributes) => {
   return new Ticket({
     _id: attrs.id,
     title: attrs.title,
-    price: attrs.price
+    price: attrs.price,
   });
 };
 

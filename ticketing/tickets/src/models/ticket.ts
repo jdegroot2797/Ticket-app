@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 // properties required to build a ticket
 interface TicketAttributes {
@@ -13,6 +14,9 @@ interface TicketDocument extends mongoose.Document {
   title: string;
   price: number;
   userId: string;
+
+  // Add definition for typescript to acknowledge we have a version attribute on the ticket object
+  version: number;
 }
 
 // properties tied to the Ticket model
@@ -45,6 +49,10 @@ const ticketSchema = new mongoose.Schema(
     },
   },
 );
+
+// Mongoose OCC (Optimistic Concurrency Control) plugin
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
 
 // For typescript to help tell what is needed to create a ticket
 ticketSchema.statics.createTicket = (attrs: TicketAttributes) => {

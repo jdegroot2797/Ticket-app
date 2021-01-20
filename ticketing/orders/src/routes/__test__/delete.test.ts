@@ -38,6 +38,7 @@ it('Order status changed to cancelled', async () => {
 it('emits an event for a cancelled order', async () => {
   // create a ticket
   const ticket = Ticket.build({
+    id: 
     title: 'asdsadsa',
     price: 1000,
   });

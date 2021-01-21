@@ -56,3 +56,21 @@ it('acknowledges the messages', async () => {
 
   expect(msg.ack).toHaveBeenCalled();
 });
+
+it('will not call the ack function if the event has skipped a version iteration', async () => {
+  const { msg, data, listener, ticket } = await setup();
+
+  // skip some version
+  data.version = 20;
+
+  // the route should not have found any ticket with this version
+  try {
+    await listener.onMessage(data, msg);
+  } catch (err) {
+    console.log('could not find ticket!');
+  }
+
+  // listener should have acknowledged the message since
+  //it is waiting for correct version number
+  expect(msg.ack).not.toHaveBeenCalled();
+});

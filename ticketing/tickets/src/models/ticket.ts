@@ -17,6 +17,7 @@ interface TicketDocument extends mongoose.Document {
 
   // Add definition for typescript to acknowledge we have a version attribute on the ticket object
   version: number;
+  orderId?: string;
 }
 
 // properties tied to the Ticket model
@@ -38,6 +39,9 @@ const ticketSchema = new mongoose.Schema(
     userId: {
       type: String,
       required: true,
+    },
+    orderId: {
+      type: String,
     },
   },
   {

@@ -4,7 +4,6 @@ import { queueGroupName } from './queue-group-name';
 import { Ticket } from '../../models/ticket';
 import { TicketUpdatedPublisher } from '../publishers/ticket-updated-publisher';
 
-
 export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
   subject: Subjects.OrderCreated = Subjects.OrderCreated;
   queueGroupName = queueGroupName;
@@ -18,11 +17,21 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
       throw new Error('Ticket could not be found');
     }
 
-    // Mark the ticket to "reserved" staatus through orderID
+    // Mark the ticket to "reserved" status through orderID
     ticket.set({ orderId: data.id });
 
     // Save the ticket
     await ticket.save();
+
+    // create the updated publisher and publish info about the event
+    new TicketUpdatedPublisher(this.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      version: ticket.version,
+      price: ticket.price,
+      userId: ticket.userId,
+      orderId: ticket.orderId,
+    });
 
     // Acknowledge the message from publisher
     msg.ack();

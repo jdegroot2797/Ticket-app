@@ -5,6 +5,7 @@ import {
   validateRequest,
   NotFoundError,
   NotAuthError,
+  BadRequestError,
 } from '@jdtix/common';
 import { Ticket } from '../models/ticket';
 import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
@@ -28,6 +29,11 @@ router.put(
     // ensure the ticket exists
     if (!ticket) {
       throw new NotFoundError();
+    }
+
+    // make sure a reserved ticket cannot be edited by a user
+    if (ticket.orderId) {
+      throw new BadRequestError('A reserved ticket cannot be edited');
     }
 
     // ensure the user is updating a ticket they own

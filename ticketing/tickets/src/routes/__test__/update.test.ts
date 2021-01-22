@@ -2,6 +2,7 @@ import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket';
 import { natsWrapper } from '../../nats-wrapper';
+import mongoose from 'mongoose';
 
 const createTicket = () => {
   const title = 'adjgdsfd';
@@ -143,4 +144,34 @@ it('publishes an event', async () => {
   // this is due to the creation of ticket and then the update
   // each should emmit an event message to the NATS server
   expect(natsWrapper.client.publish).toHaveBeenCalledTimes(2);
+});
+
+it('ensures that a reserved ticket cannot be updated', async () => {
+  // save the cookie of the user
+  const cookie = global.testSignin();
+
+  // create the ticket first
+  const res = await request(app)
+    .post(`/api/tickets/`)
+    .set('Cookie', cookie)
+    .send({
+      title: 'aslkdfj',
+      price: 20,
+    });
+
+  // Edit the tickets orderId (reserved)
+  const ticket = await Ticket.findById(res.body.id);
+  ticket!.set({ orderId: mongoose.Types.ObjectId().toHexString() });
+  await ticket!.save();
+
+  // try to updated the ticket once it's in "reserved" state
+  // this should result in a "BadRequestError" aka error 400
+  await request(app)
+    .put(`/api/tickets/${res.body.id}`)
+    .set('Cookie', cookie)
+    .send({
+      title: 'new title',
+      price: 100,
+    })
+    .expect(400);
 });

@@ -45,3 +45,12 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: jdegroot2797/expiration
+      # - image: us.gcr.io/tix-app-295201/orders
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

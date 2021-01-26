@@ -1,6 +1,7 @@
 // import is lowercase for natsWrapper since this is
 // indicating this an instance of the natsWrapper
 import { natsWrapper } from './nats-wrapper';
+import { OrderCreatedListener } from './events/listeners/order-created-listener';
 
 const startUp = async () => {
   if (!process.env.NATS_CLIENT_ID) {
@@ -33,6 +34,9 @@ const startUp = async () => {
     // this allows for graceful stan client shutdown
     process.on('SIGINT', () => natsWrapper.client.close());
     process.on('SIGTERM', () => natsWrapper.client.close());
+
+    // Listeners
+    new OrderCreatedListener(natsWrapper.client).listen();
   } catch (err) {
     console.error(err);
   }

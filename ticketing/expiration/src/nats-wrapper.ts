@@ -1,6 +1,5 @@
 import nats, { Stan } from 'node-nats-streaming';
 
-
 // Signleton class for one instance of the class to be
 // initialized in te index.ts file and accessed by all files
 // within the tickets service
@@ -23,7 +22,7 @@ class NatsWrapper {
 
     return new Promise<void>((resolve, reject) => {
       this.client.on('connect', () => {
-        console.log('Connected to NATS from ticket servce');
+        console.log('Connected to NATS from expiration service');
         resolve();
       });
       this.client.on('error', (err) => {

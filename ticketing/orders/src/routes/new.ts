@@ -15,7 +15,7 @@ import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
-const TICKET_EXPIRATION_TIMESLOT_IN_SECONDS = 15 * 60; // 15 minutes
+const TICKET_EXPIRATION_TIMESLOT_IN_SECONDS = 1 * 60; // 15 minutes
 
 router.post(
   '/api/orders',

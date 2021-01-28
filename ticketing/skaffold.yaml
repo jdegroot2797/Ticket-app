@@ -54,3 +54,12 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: jdegroot2797/payments
+      # - image: us.gcr.io/tix-app-295201/orders
+      context: payments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

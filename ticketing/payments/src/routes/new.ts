@@ -41,6 +41,8 @@ router.post(
     // 3. ensure order exists/ not cancelled
     // 4. make sure order is only paid for by one user, which belongs to that user and not another
 
+
+    // implement stripe js payment authorization
     res.send({ success: true });
   },
 );

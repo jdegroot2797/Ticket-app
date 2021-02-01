@@ -5,6 +5,7 @@ import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 
 // ROUTES
+import { createChargeRouter } from './routes/new';
 
 // OUR MIDDLEWARE
 import { errorHandler, NotFoundError, currentUser } from '@jdtix/common';
@@ -27,6 +28,7 @@ app.use(
 app.use(currentUser);
 
 // REGISTER ROUTE HANDLERS
+app.use(createChargeRouter);
 
 app.all('*', async () => {
   throw new NotFoundError();

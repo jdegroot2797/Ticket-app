@@ -10,6 +10,7 @@ import {
 } from '@jdtix/common';
 import { Order } from '../models/order';
 import { stripe } from '../stripe';
+import { Payment } from '../models/payment';
 
 const router = express.Router();
 
@@ -37,19 +38,19 @@ router.post(
     }
 
     //create the charge
-    await stripe.charges.create({
+    const charge = await stripe.charges.create({
       currency: 'usd',
       amount: order.price * 100,
       source: token,
     });
 
-    //TODO: automate testing for
-    // 1. creating order, waiting for expiration window, then trying to paym
-    // 2. ensure payment is successfully
-    // 3. ensure order exists/ not cancelled
-    // 4. make sure order is only paid for by one user, which belongs to that user and not another
+    const payment = Payment.build({
+      orderId,
+      stripeId: charge.id,
+    });
+    await payment.save();
 
-    // implement stripe js payment authorization
+    // need to publish an event
     res.status(201).send({ success: true });
   },
 );

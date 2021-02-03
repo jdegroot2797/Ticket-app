@@ -4,6 +4,8 @@ import { app } from '../app';
 import { Order } from '../models/order';
 import { OrderStatus } from '@jdtix/common';
 
+jest.mock('../../stripe');
+
 it('returns 404 error when attempting to purchase a non-existant order', async () => {
   await request(app)
     .post('/api/payments')
@@ -51,8 +53,30 @@ it('returns 400 when purchasing a cancelled order', async () => {
     .post('/api/payments')
     .set('Cookie', global.testSignin(userId))
     .send({
-      orderID: order.id,
+      orderId: order.id,
       token: '12312321',
+    })
+    .expect(400);
+});
+
+it('returns a 204 when provided valid inputs', async () => {
+  const userId = mongoose.Types.ObjectId().toHexString();
+
+  const order = Order.build({
+    id: mongoose.Types.ObjectId().toHexString(),
+    userId: userId,
+    version: 0,
+    price: 100,
+    status: OrderStatus.Created,
+  });
+  await order.save();
+
+  await request(app)
+    .post('/api/payments')
+    .set('Cookie', global.testSignin(userId))
+    .send({
+      orderId: order.id,
+      token: 'tok_visa',
     })
     .expect(400);
 });

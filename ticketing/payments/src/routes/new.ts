@@ -9,6 +9,7 @@ import {
   OrderStatus,
 } from '@jdtix/common';
 import { Order } from '../models/order';
+import { stripe } from '../stripe';
 
 const router = express.Router();
 
@@ -40,7 +41,6 @@ router.post(
     // 2. ensure payment is successfully
     // 3. ensure order exists/ not cancelled
     // 4. make sure order is only paid for by one user, which belongs to that user and not another
-
 
     // implement stripe js payment authorization
     res.send({ success: true });

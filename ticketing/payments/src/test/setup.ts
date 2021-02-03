@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken';
 declare global {
   namespace NodeJS {
     interface Global {
-      testSignin(): string[];
+      testSignin(id?: string): string[];
       testMongoId(): string[];
     }
   }
@@ -64,10 +64,10 @@ afterAll(async () => {
 // and when testing we don't want to interact with auth
 // we need to make our own testing JWT for auth testing in tickets service
 
-global.testSignin = () => {
+global.testSignin = (id?: string) => {
   // Build a JWT paylod {id, email, iat}
   const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: id || new mongoose.Types.ObjectId().toHexString(),
     email: 'test@test.com',
   };
 

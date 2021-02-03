@@ -19,7 +19,7 @@ spec:
           env:
             # use this specific POD's name which is randomly generated to be used as the value
             - name: NATS_CLIENT_ID
-              valueFrom: 
+              valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: NATS_URI
@@ -33,6 +33,11 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
+            - name: STRIPE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secret
+                  key: STRIPE_KEY
 ---
 apiVersion: v1
 kind: Service

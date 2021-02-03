@@ -36,6 +36,13 @@ router.post(
       );
     }
 
+    //create the charge
+    await stripe.charges.create({
+      currency: 'usd',
+      amount: order.price * 100,
+      source: token,
+    });
+
     //TODO: automate testing for
     // 1. creating order, waiting for expiration window, then trying to paym
     // 2. ensure payment is successfully

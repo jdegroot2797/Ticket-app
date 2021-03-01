@@ -1,8 +1,23 @@
 import { useState } from 'react';
+import useRequest from '../../hooks/use-request';
 
 const NewTicket = () => {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
+  const { doRequest, errors } = useRequest({
+    url: '/api/tickets',
+    method: 'post',
+    body: {
+      title,
+      price,
+    },
+    onSuccess: (ticket) => console.log(ticket),
+  });
+
+  const onSubmitHelper = (event) => {
+    event.preventDefault();
+    doRequest();
+  };
 
   const onBlurHelper = () => {
     // ensure price input value is a number and only 2 decimals
@@ -19,7 +34,7 @@ const NewTicket = () => {
   return (
     <div>
       <h1> Create a Ticket</h1>
-      <form>
+      <form onSubmit={onSubmitHelper}>
         <div className="form-group">
           <label>Title</label>
           <input
@@ -37,6 +52,7 @@ const NewTicket = () => {
             className="form-control"
           />
         </div>
+        {errors}
         <button className="btn btn-primary">Create</button>
       </form>
     </div>

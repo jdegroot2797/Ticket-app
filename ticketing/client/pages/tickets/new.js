@@ -4,6 +4,18 @@ const NewTicket = () => {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
 
+  const onBlurHelper = () => {
+    // ensure price input value is a number and only 2 decimals
+    // USD doesn't typically go below 2 decimals
+    const value = parseFloat(price);
+
+    if (isNaN(value)) {
+      return;
+    }
+
+    setPrice(value.toFixed(2));
+  };
+
   return (
     <div>
       <h1> Create a Ticket</h1>
@@ -20,6 +32,7 @@ const NewTicket = () => {
           <label>Price</label>
           <input
             value={price}
+            onBlur={onBlurHelper}
             onChange={(e) => setPrice(e.target.value)}
             className="form-control"
           />

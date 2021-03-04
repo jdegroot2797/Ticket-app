@@ -1,8 +1,36 @@
 import buildClient from '../api/build-client';
+import Link from 'next/link';
 
 // this is a component (browser)
-const landingPage = ({ currentUser }) => {
-  return currentUser ? <h1>Signed in</h1> : <h1>Not signed in</h1>;
+const LandingPage = ({ currentUser, tickets }) => {
+  const ticketList = tickets.map((ticket) => {
+    return (
+      <tr key={ticket.id}>
+        <td>{ticket.title}</td>
+        <td>{ticket.price}</td>
+        <td>
+          <Link href="/tickets/[ticketId]" as={`/tickets/${ticket.id}`}>
+            <a>View</a>
+          </Link>
+        </td>
+      </tr>
+    );
+  });
+
+  return (
+    <div>
+      <h1>Tickets</h1>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>{ticketList}</tbody>
+      </table>
+    </div>
+  );
 };
 
 //this is not a components (server)
@@ -23,11 +51,10 @@ const landingPage = ({ currentUser }) => {
 // Window only exist in browser, does not exist in node.js
 // with this we now know we are on the server and requests should be made to
 // http://<service name>.<namespace name>.svc.cluster.local
-landingPage.getInitialProps = async (context) => {
-  const client = buildClient(context);
-  const { data } = await client.get('/api/users/currentuser');
+LandingPage.getInitialProps = async (context, client, currentUser) => {
+  const { data } = await client.get('/api/tickets');
 
-  return data;
+  return { tickets: data };
 };
 
-export default landingPage;
+export default LandingPage;

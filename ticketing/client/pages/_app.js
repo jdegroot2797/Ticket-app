@@ -12,7 +12,7 @@ const AppComponent = ({ Component, pageProps, currentUser }) => {
     <div>
       <Header currentUser={currentUser} />
       <div className="container">
-        <Component {...pageProps} />;
+        <Component {...pageProps} />
       </div>
     </div>
   );
@@ -31,15 +31,17 @@ AppComponent.getInitialProps = async (appContext) => {
   // get information for specific page
   // can pass this information to header
   if (appContext.Component.getInitialProps) {
-    pageProps = await appContext.Component.getInitialProps(appContext.ctx);
+    pageProps = await appContext.Component.getInitialProps(
+      appContext.ctx,
+      client,
+      data.currentUser,
+    );
   }
-
-  console.log(pageProps);
 
   // returns and passes data to pageProps in AppComponent
   return {
     pageProps,
-    currentUser: data.currentUser,
+    ...data,
   };
 };
 

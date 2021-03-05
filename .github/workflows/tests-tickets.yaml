@@ -1,0 +1,11 @@
+name: tests-tickets
+
+on: 
+  pull_request
+  
+jobs:
+  build:
+    runs-on: unbuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd tickets && install && npm run test:ci
